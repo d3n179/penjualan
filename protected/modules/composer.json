@@ -1,0 +1,6 @@
+{
+    "require": {
+        "nategood/httpful": "^0.2.19",
+        "mikehaertl/phpwkhtmltopdf": "^2.1"
+    }
+}

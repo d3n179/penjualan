@@ -1,0 +1,388 @@
+<com:TContent ID="Main">
+	<h2>Master Pemasok</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	<div class="modal fade" id="modal-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title"><com:TActiveLabel ID="modalJudul"/></h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="nama" class="control-label">Nama</label>
+								<com:TActiveHiddenField ID="idPemasok"/>
+								<com:TActiveTextBox 
+										ID="nama" 
+										CssClass="form-control" 
+										Attributes.PlaceHolder="Nama"/>
+										<com:TRequiredFieldValidator 
+										  ControlToValidate="nama"											 
+										  ErrorMessage=""
+										  Display="Dynamic"
+										  FocusOnError="true" 
+										  CssClass="valRequired"
+										  ControlCssClass="valctrl"
+										  ValidationGroup="val" />
+							</div>	
+							
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<label for="alamat" class="control-label">Alamat</label>
+								<com:TActiveTextBox 
+										ID="alamat" 
+										CssClass="form-control" 
+										TextMode="MultiLine"
+										Attributes.PlaceHolder="Alamat"
+										Height="50px"/>
+										
+							</div>	
+							
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="alamat" class="control-label">Telepon</label>
+								<com:TActiveTextBox 
+										ID="telepon" 
+										CssClass="form-control"
+										Attributes.PlaceHolder="Telepon"/>
+										
+							</div>	
+							
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="fax" class="control-label">Fax</label>
+								<com:TActiveTextBox 
+										ID="fax" 
+										CssClass="form-control"
+										Attributes.PlaceHolder="Fax"/>
+							</div>	
+							
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="contact_person" class="control-label">Contact Person</label>
+								<com:TActiveTextBox 
+										ID="contact_person" 
+										CssClass="form-control"
+										Attributes.PlaceHolder="Contact Person"/>
+							</div>	
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									<com:TActiveButton
+										ID="submitBtn" 
+										Text="Submit"
+										OnClick="submitBtnClicked"
+										CausesValidation="true"
+										ValidationGroup="val"
+										CssClass="btn btn-info">
+										 <prop:ClientSide 
+											OnLoading="loadContent();"
+											OnComplete="unloadContent();"/>
+									</com:TActiveButton>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="modal-2">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Detail Pemasok - <com:TActiveLabel ID="nmPemasok"/></h4>
+				</div>
+				
+				<div class="modal-body">
+					
+					<div class="row" id="DDPaketPanel" >
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="DDBarang" class="control-label">Nama Barang</label>
+								<com:TActiveHiddenField ID="idBrngPemasok"/>
+								<com:TActiveHiddenField ID="arrBarang"/>
+								 <com:TActiveDropDownList 
+									ID="DDBarang"
+									Width="190px"
+									PromptText="--Pilih Barang--"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="true"
+									CssClass="form-control"
+									DataTextField="nama"
+									DataValueField="id">
+									</com:TActiveDropDownList>
+										
+									<com:TRequiredFieldValidator 
+										  ControlToValidate="DDBarang"											 
+										  ErrorMessage=""
+										  Display="Dynamic"
+										  FocusOnError="true" 
+										  CssClass="valRequired"
+										  ControlCssClass="valctrl"
+										  ValidationGroup="val2" 
+										  InitialValue="empty"/>
+							</div>	
+							
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="" class="control-label"></label>	
+								<com:TActiveButton
+										ID="tambahBtn" 
+										Text="Tambah"
+										OnClick="tambahBtnClicked"
+										CausesValidation="true"
+										ValidationGroup="val2"
+										CssClass="btn btn-green">
+										<prop:ClientSide 
+											OnLoading="loadContent();"
+											OnComplete="unloadContent();"/>
+								</com:TActiveButton>
+							</div>	
+							
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<table class="table table-bordered datatable" id="tableBrngPemasok">
+									<thead>
+										<tr>
+											<th width="300px">Nama Barang</th>
+											<th width="150px">Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+							</table>
+							</div>	
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<a href="javascript:;" onclick="jQuery('#modal-1').modal('show');jQuery('#<%= $this->modalJudul->getClientID()%>').text('Tambah Pemasok');clearForm();" class="btn btn-info">Tambah</a>
+			</div>
+		</div>	
+	</div>	
+	<div class="row">	
+		<div class="col-md-12">
+	<div class="form-group">
+	<table class="table table-bordered table-striped datatable" id="table-1">
+			<thead>
+				<tr>
+					<th width="300px">Nama Pemasok</th>
+					<th width="300px">Alamat</th>
+					<th width="150px">Telepon</th>
+					<th width="150px">Fax</th>
+					<th width="150px">Contact Person</th>
+					<th width="150px">Aksi</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="editCallback" OnCallback="editForm" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="deleteCallback" OnCallback="deleteData" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="deleteBrgCallback" OnCallback="deleteBarang" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="detailCallback" OnCallback="BindGridBarangPemasok" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				BindGrid();
+				BindGridBrgPemasok();
+			});
+			
+			
+			function clearForm()
+			{
+				jQuery('#<%= $this->nama->getClientID()%>').val('');
+				jQuery('#<%= $this->alamat->getClientID()%>').val('');
+				jQuery('#<%= $this->telepon->getClientID()%>').val('');
+				jQuery('#<%= $this->fax->getClientID()%>').val('');
+				jQuery('#<%= $this->contact_person->getClientID()%>').val('');
+				jQuery('#<%= $this->idPemasok->getClientID()%>').val('');
+				
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			
+			function BindGridBrgPemasok()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#tableBrngPemasok");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function editClicked(id)
+			{
+				if(confirm('Edit Data Ini ? '))
+				{
+					loadContent();
+					var request= <%= $this->editCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+					
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			function deleteClicked(id)
+			{
+				if(confirm('Hapus Data Ini ? '))
+				{
+					loadContent();
+					var request= <%= $this->deleteCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+					
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			function detailClicked(id,nama)
+			{
+				jQuery('#<%= $this->nmPemasok->getClientID()%>').text(nama);
+				jQuery('#<%= $this->idBrngPemasok->getClientID()%>').val(id);
+				loadContent();
+					var request= <%= $this->detailCallback->ActiveControl->Javascript %>;
+						request.dispatch();
+						
+				jQuery('#modal-2').modal('show');
+			}
+			
+			function deleteBarangClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->deleteBrgCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+		</script>
+		
+</com:TContent>

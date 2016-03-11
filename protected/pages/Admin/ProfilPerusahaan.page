@@ -1,0 +1,76 @@
+<com:TContent ID="Main">
+	<h2>Profil Perusahaan</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<label for="username" class="control-label">Nama Perusahaan</label>
+				<com:TActiveTextBox 
+					ID="namaperus" 
+					CssClass="form-control" 
+					Attributes.PlaceHolder="Nama Perusahaan"/>
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-3">
+		<div class="form-group">
+			<label for="password" class="control-label">Alamat</label>
+				<com:TActiveTextBox 
+					ID="alamat" 
+					CssClass="form-control" 
+					TextMode="MultiLine"
+					Attributes.PlaceHolder="Alamat"/>
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<label for="username" class="control-label">Telepon</label>
+				<com:TActiveTextBox 
+					ID="telepon" 
+					CssClass="form-control" 
+					Attributes.PlaceHolder="Telepon"/>
+		</div>	
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
+		<div class="form-group">
+			<label for="username" class="control-label">Email</label>
+				<com:TActiveTextBox 
+					ID="email" 
+					CssClass="form-control" 
+					Attributes.PlaceHolder="Email"/>
+		</div>	
+	</div>
+</div>	
+<div class="row">
+	<div class="col-md-3">
+		<div class="form-group">
+			<com:TActiveButton
+					ID="submitBtn" 
+					Text="Update"
+					OnClick="updateProfileClicked"
+					CausesValidation="false"
+					CssClass="btn btn-green">
+					<prop:ClientSide 
+						OnLoading="loadContent();"
+						OnComplete="unloadContent();"/>
+				</com:TActiveButton>
+		</div>	
+	</div>
+</div>					
+	</com:TActivePanel>	<!--form End-->
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				
+						
+			});
+			
+		</script>
+		
+</com:TContent>

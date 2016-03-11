@@ -1,0 +1,943 @@
+<com:TContent ID="Main">
+	<h2>Master Cetakan</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	
+	<div class="modal fade" id="modal-3">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Bill Penjualan</h4>
+				</div>
+				
+				<div class="modal-body" style="height:500px">
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modal-1">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Tambah Master Cetakan</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">	
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="nmCetakan" class="control-label">Nama Cetakan</label>
+								<com:TActiveHiddenField ID="index"/>
+								<com:TActiveTextBox
+									ID="nmCetakan" 
+									AutoPostBack="false"
+									CssClass="form-control"
+									CausesValidation = "true">
+							</com:TActiveTextBox>
+									<com:TRequiredFieldValidator 
+										ControlToValidate="nmCetakan"											 
+										ErrorMessage=""
+										Display="Dynamic"
+										FocusOnError="true" 
+										CssClass="valRequired"
+										ControlCssClass="valctrl"
+										ValidationGroup="val2" />
+							</div>
+						</div>
+						
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="nmCetakan" class="control-label">Kategori Cetakan</label>
+								<com:TActiveDropDownList 
+									ID="DDKategCetakan"
+									Width="190px"
+									PromptText = "-- Pilih Kategori Cetakan --"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="false"
+									CssClass="form-control"
+									DataTextField="nama"
+									DataValueField="id">
+									</com:TActiveDropDownList>
+										
+									<com:TRequiredFieldValidator 
+										  ControlToValidate="DDKategCetakan"											 
+										  ErrorMessage=""
+										  Display="Dynamic"
+										  FocusOnError="true" 
+										  CssClass="valRequired"
+										  ControlCssClass="valctrl"
+										  ValidationGroup="val2" 
+										  InitialValue="empty"/>
+							</div>
+						</div>
+						
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs bordered"><!-- available classes "bordered", "right-aligned" -->
+								<li class="active">
+									<a href="#bahanCetakan" data-toggle="tab">
+										<span class="hidden-xs">Bahan</span>
+									</a>
+								</li>
+								<li>
+									<a href="#parameterCetakan" data-toggle="tab">
+										<span class="hidden-xs">Parameter</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="tab-content">
+						<div class="tab-pane active" id="bahanCetakan">
+							<div class="row">	
+								<div class="col-md-12">
+									<div class="form-group">
+										
+										<button type="button" class="btn btn-blue" OnClick="addRowBahan();">Tambah Bahan</button>
+										<table class="table table-bordered table-striped datatable" id="table-bahan">
+											<thead>
+												<tr>
+													<th width="200px">Nama Bahan</th>
+													<th width="5px"></th>
+													<th width="50px">Ukuran</th>
+													<th width="50px">Harga/Potong</th>
+													<th width="50px">Aksi</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>	
+						</div>
+						<div class="tab-pane" id="parameterCetakan">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-group">
+										<button type="button" class="btn btn-blue" OnClick="addRowParam();">Tambah Parameter</button>
+										<table class="table table-bordered table-striped datatable" id="table-parameter">
+											<thead>
+												<tr>
+													<th width="200px">Parameter</th>
+													<th width="50px">Harga</th>
+													<th width="50px">Aksi</th>
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="JnsTinta" class="control-label">Jenis Tinta</label>
+								<com:TActiveDropDownList
+									ID="JnsTinta" 
+									AutoPostBack="false"
+									Attributes.OnChange="tintaChanged();"
+									CssClass="form-control"
+									CausesValidation = "false">
+									<com:TListItem Text="Xerox @ 1 Sisi" Value="0"/>
+									<com:TListItem Text="Xerox @ 2 Sisi" Value="1"/>
+									<com:TListItem Text="Inkjet @ 1 Sisi" Value="2"/>
+									<com:TListItem Text="Inkjet @ 2 Sisi" Value="3"/>
+								</com:TActiveDropDownList>
+								<com:TActiveTextBox
+									ID="hrgTinta" 
+									Attributes.PlaceHolder="Harga Tinta"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "true"/>
+								
+								<com:TRequiredFieldValidator 
+										ControlToValidate="hrgTinta"											 
+										ErrorMessage=""
+										Display="Dynamic"
+										FocusOnError="false" 
+										CssClass="valRequired"
+										ControlCssClass="valctrl"
+										ValidationGroup="val2" />
+										
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="JnsLaminasi" class="control-label">Laminasi</label>
+								<com:TActiveDropDownList
+									ID="JnsLaminasi" 
+									AutoPostBack="false"
+									Attributes.OnChange="laminasiChanged();"
+									CssClass="form-control"
+									CausesValidation = "false">
+									<com:TListItem Text="DOFF @ 1 Sisi" Value="0"/>
+									<com:TListItem Text="DOFF @ 2 Sisi" Value="1"/>
+									<com:TListItem Text="GLOSSY @ 1 Sisi" Value="2"/>
+									<com:TListItem Text="GLOSSY @ 2 Sisi" Value="3"/>
+									<com:TListItem Text="Non Laminasi" Value="4"/>
+								</com:TActiveDropDownList>
+								<com:TActiveTextBox
+									ID="hrgLaminasi" 
+									Enabled="false"
+									Attributes.PlaceHolder="Harga Laminasi"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "true"/>
+									<com:TRequiredFieldValidator 
+										ControlToValidate="hrgLaminasi"											 
+										ErrorMessage=""
+										Display="Dynamic"
+										FocusOnError="false" 
+										CssClass="valRequired"
+										ControlCssClass="valctrl"
+										ValidationGroup="val2" />
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="totalModal" class="control-label">Total Modal</label>
+								<com:TActiveTextBox
+									ID="totalModal" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="Total Modal"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="persen" class="control-label">10 %</label>
+								<com:TActiveTextBox
+									ID="persen" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="10 %"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="totalModal" class="control-label">Subtotal</label>
+								<com:TActiveTextBox
+									ID="subtotalJual" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="Subtotal"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="totalModal" class="control-label">Harga Jual</label>
+								<com:TActiveTextBox
+									ID="totalHrgJual" 
+									AutoPostBack="false"
+									Attributes.PlaceHolder="0.00"
+									CssClass="form-control"
+									CausesValidation = "true">
+							</com:TActiveTextBox>
+									<com:TRequiredFieldValidator 
+										ControlToValidate="totalHrgJual"											 
+										ErrorMessage=""
+										Display="Dynamic"
+										FocusOnError="true" 
+										CssClass="valRequired"
+										ControlCssClass="valctrl"
+										ValidationGroup="val2" />
+										
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+						<com:TActiveButton
+						ID="tambahCtknBtn" 
+						Text="Proses"
+						OnClick="tambahBtnClicked"
+						CausesValidation="true"
+						ValidationGroup="val2"
+						CssClass="btn btn-green">
+						<prop:ClientSide 
+							OnLoading="loadContent();"/>
+					</com:TActiveButton>
+				
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" onclick="jQuery('#modal-1').modal('show');clearForm();" class="btn btn-info btn-icon icon-left"><i class="entypo-plus" ></i>Tambah</button>
+				<com:TActiveButton
+					ID="tambahBtn" 
+					Text="Tambah"
+					Visible="false"
+					OnClick="tambahBtnClicked"
+					CausesValidation="true"
+					ValidationGroup="val2"
+					CssClass="btn btn-info">
+					<prop:ClientSide 
+						OnLoading="loadContent();"
+						OnComplete="unloadContent();"/>
+				</com:TActiveButton>
+			</div>
+		</div>	
+	</div>
+	
+	<com:TActiveHiddenField ID="arrBarang"/>
+	<div class="row">	
+		<div class="col-md-12">
+			<div class="form-group">
+			<com:TActiveHiddenField ID="arrCetakan"/>
+				<table class="table table-bordered table-striped datatable" id="table-1">
+					<thead>
+						<tr>
+							<th width="200px">Nama Cetakan</th>
+							<th width="50px">Modal</th>
+							<th width="50px">10 % </th>
+							<th width="50px">Subtotal</th>
+							<th width="50px">Harga Jual</th>
+							<th width="50px">Aksi</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="barangCallback" OnCallback="barangChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="ukuranCallback" OnCallback="ukuranChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="deleteCallback" OnCallback="deleteData" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="submitCallback" OnCallback="submitBtnClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="cekStokCallback" OnCallback="cekStok" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="tambahCallback" OnCallback="prosesTambah" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="editCallback" OnCallback="editData" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				jQuery('.hargaClass').autoNumeric('init');
+				jQuery('#<%= $this->totalHrgJual->getClientID()%>').autoNumeric('init');
+				BindGrid();
+				BindGridBahan();
+				BindGridParameter();
+			});
+			
+			
+			function clearForm()
+			{
+				
+				jQuery('#<%= $this->index->getClientID()%>').val('');
+				jQuery('#<%= $this->nmCetakan->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgTinta->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val('');
+				jQuery('#<%= $this->totalModal->getClientID()%>').val('0.00');
+				jQuery('#<%= $this->persen->getClientID()%>').val('0.00');
+				jQuery('#<%= $this->totalHrgJual->getClientID()%>').val('');
+				jQuery('#<%= $this->subtotalJual->getClientID()%>').val('0.00');
+				
+				jQuery('#<%= $this->JnsLaminasi->getClientID()%>').val('0');
+				jQuery('#<%= $this->JnsTinta->getClientID()%>').val('0');
+				jQuery('#<%= $this->DDKategCetakan->getClientID()%>').val('empty');
+				jQuery("#table-bahan").dataTable().fnDestroy();
+				jQuery("#table-bahan tbody").empty();
+				jQuery("#table-bahan tbody").append("");
+				jQuery("#table-parameter").dataTable().fnDestroy();
+				jQuery("#table-parameter tbody").empty();
+				jQuery("#table-parameter tbody").append("");
+				BindGridBahan();
+				BindGridParameter();
+				laminasiChanged();
+				tintaChanged();
+			}
+			
+			function addRowBahan()
+			{
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="nmBrg'+i+'" class="nmBrg" type="text" >',
+					'<label id="arrHargaUkuran'+i+'" class="arrHargaUkuran" Style="Display:None;"></label>',
+					'<input id="ukuranBrg'+i+'" class="ukuranBrg" type="text" >',
+					'<input id="hargaBrg'+i+'" width="50px" class="form-control autoJml hargaBrg" type="text" disabled>',
+					'<button type="button" id="row'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowbahan('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRowbahan(id)
+			{
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				var rowId = jQuery("#row"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+				calculateAll();
+			}
+			
+			function cekStok(i)
+			{
+				var stok = jQuery("#stokBrg"+i).text();
+				var jumlah = accounting.unformat(jQuery("#jumlahBrg"+i).val(),",");
+				if(stok < jumlah)
+				{
+					jQuery("#jumlahBrg"+i).val('');
+				}
+			}
+			
+			function addRowParam()
+			{
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="nmParam'+i+'" class="form-control nmParam" type="text" >',
+					'<input id="hargaParam'+i+'" width="50px" class="form-control autoJmlParam hargaParam" type="text" onChange="calculateAll()">',
+					'<button type="button" id="rowParam'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowparam('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRowparam(id)
+			{
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				var rowId = jQuery("#rowParam"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+				calculateAll();
+			}
+			
+			function laminasiChanged()
+			{
+				var JnsLaminasi = jQuery('#<%= $this->JnsLaminasi->getClientID()%>').val();
+				if(JnsLaminasi == '0' || JnsLaminasi == '2')
+				{
+					var HrgLaminasi = accounting.formatNumber(1500, 2, ",");
+					jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val(HrgLaminasi);
+				}
+				else if(JnsLaminasi == '1' || JnsLaminasi == '3')
+				{
+					var HrgLaminasi = accounting.formatNumber(3000, 2, ",");
+					jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val(HrgLaminasi);
+				}
+				else if(JnsLaminasi == '4')
+				{
+					var HrgLaminasi = accounting.formatNumber(0, 2, ",");
+					jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val(HrgLaminasi);
+				}
+				calculateAll();
+			}
+			
+			function tintaChanged()
+			{
+				
+				var JnsTinta = jQuery('#<%= $this->JnsTinta->getClientID()%>').val();
+				if(JnsTinta == '0' )
+				{
+					var HrgTinta = accounting.formatNumber(2000, 2, ",");
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').val(HrgTinta);
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').prop( "disabled", true );
+				}
+				else if(JnsTinta == '1')
+				{
+					var HrgTinta = accounting.formatNumber(4000, 2, ",");
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').val(HrgTinta);
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').prop( "disabled", true );
+				}
+				else if(JnsTinta == '2' || JnsTinta == '3')
+				{
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').val('');
+					jQuery('#<%= $this->hrgTinta->getClientID()%>').prop( "disabled", false );
+				}
+				calculateAll();
+			}
+			
+			function calculateAll()
+			{
+				var TotalBahan = calculateBahan();
+				var TotalParam = calculateParam();
+				var hargaTinta = accounting.unformat(jQuery('#<%= $this->hrgTinta->getClientID()%>').val());
+				var hargaLaminasi = accounting.unformat(jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val());
+				var modal = accounting.unformat(jQuery('#<%= $this->totalModal->getClientID()%>').val());
+				var sepuluhPersen = accounting.unformat(jQuery('#<%= $this->persen->getClientID()%>').val());
+				var totalModal = 0;
+				var TotalHargaJual = 0;
+				
+				totalModal = TotalBahan + hargaTinta + hargaLaminasi + TotalParam;
+				totalPersen = totalModal * (0.1);
+				
+				TotalHargaJual = totalModal + totalPersen;
+				
+				totalModal = accounting.formatNumber(totalModal, 2, ",");
+				totalPersen = accounting.formatNumber(totalPersen, 2, ",");
+				TotalHargaJual = accounting.formatNumber(TotalHargaJual, 2, ",");
+				
+				jQuery('#<%= $this->totalModal->getClientID()%>').val(totalModal)
+				jQuery('#<%= $this->persen->getClientID()%>').val(totalPersen)
+				jQuery('#<%= $this->subtotalJual->getClientID()%>').val(TotalHargaJual);
+			}
+			
+			function calculateBahan()
+			{
+				var HargaBahan = 0;
+				var tableBahan = jQuery('#table-bahan').dataTable();
+				jQuery(tableBahan.fnGetNodes()).each(function(row) {
+					var hargaBrg = jQuery(this).find('td .hargaBrg');
+					var valHarga = jQuery(hargaBrg[0]).val(); 
+					valHarga = accounting.unformat(valHarga);
+					
+					if(valHarga > 0 && typeof valHarga !== "undefined")
+					{
+						HargaBahan = HargaBahan + valHarga;
+					}  
+				});
+				return HargaBahan;
+			}
+			
+			function calculateParam()
+			{
+				var HargaParam = 0;
+				var tableParam = jQuery('#table-parameter').dataTable();
+				jQuery(tableParam.fnGetNodes()).each(function(row) {
+					var hargaParam = jQuery(this).find('td .hargaParam');
+					var valHarga = jQuery(hargaParam[0]).val(); 
+					valHarga = accounting.unformat(valHarga);
+					if(valHarga > 0 && typeof valHarga !== "undefined")
+					{
+						HargaParam = HargaParam + valHarga;
+					}    
+				});
+				
+				return HargaParam;
+			}
+			
+			function tambahClicked()
+			{
+				var arrBahan = [];
+				var arrParam = [];
+				var TotalBahan = 0;
+				var TotalParam = 0;
+				
+				var tableBahan = jQuery('#table-bahan').dataTable();
+				jQuery(tableBahan.fnGetNodes()).each(function(row) {
+					var nmBrg = jQuery(this).find('td .nmBrg');
+					var arrHargaUkuran = jQuery(this).find('td .arrHargaUkuran');
+					var ukuranBrg = jQuery(this).find('td .ukuranBrg');
+					var hargaBrg = jQuery(this).find('td .hargaBrg');
+					var valNm = jQuery(nmBrg[1]).val(); 
+					var valArrUkuran = jQuery(arrHargaUkuran[0]).text(); 
+					var valUkuran = jQuery(ukuranBrg[1]).val(); 
+					var valHarga = jQuery(hargaBrg[0]).val(); 
+					valHarga = accounting.unformat(valHarga);
+					
+					if(valNm != '' && valHarga > 0 && valUkuran != '' && typeof valNm !== "undefined" && typeof valHarga !== "undefined" && typeof valUkuran !== "undefined")
+					{
+						TotalBahan = TotalBahan + valHarga;
+						arrBahan.push({
+						'idBahan': valNm,
+						'ukuranBahan': valUkuran,
+						'hargaBahan': valHarga
+					});
+					}  
+				});
+				
+				var tableParam = jQuery('#table-parameter').dataTable();
+				jQuery(tableParam.fnGetNodes()).each(function(row) {
+					var nmParam = jQuery(this).find('td .nmParam');
+					var hargaParam = jQuery(this).find('td .hargaParam');
+					var valNm = jQuery(nmParam[0]).val();
+					var valHarga = jQuery(hargaParam[0]).val(); 
+					valHarga = accounting.unformat(valHarga);
+					if(valNm != '' && valHarga > 0 && typeof valNm !== "undefined" && typeof valHarga !== "undefined")
+					{
+						TotalParam = TotalParam + valHarga;
+						arrParam.push({
+						'nmParam': valNm,
+						'hargaParam': valHarga
+					});
+					}    
+				});
+				
+				var nmCetakan = jQuery('#<%= $this->nmCetakan->getClientID()%>').val();
+				var hargaTinta = accounting.unformat(jQuery('#<%= $this->hrgTinta->getClientID()%>').val());
+				var hargaLaminasi = accounting.unformat(jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val());
+				var modal = accounting.unformat(jQuery('#<%= $this->totalModal->getClientID()%>').val());
+				var sepuluhPersen = accounting.unformat(jQuery('#<%= $this->persen->getClientID()%>').val());
+				var totalModal = 0;
+				var SubtotalJual = 0;
+				
+				totalModal = TotalBahan + hargaTinta + hargaLaminasi + TotalParam;
+				totalPersen = totalModal * (0.1);
+				
+				SubtotalJual = totalModal + totalPersen;
+				TotalHargaJual = accounting.unformat(jQuery('#<%= $this->totalHrgJual->getClientID()%>').val());
+				if(arrBahan.length > 0)
+				{
+					loadContent();
+					var request= <%= $this->tambahCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+								nmCetakan:nmCetakan,
+								arrBahan:arrBahan,
+								arrParam:arrParam,
+								hargaTinta:hargaTinta,
+								hargaLaminasi:hargaLaminasi,
+								totalBahan:TotalBahan,
+								totalParam:TotalParam,
+								totalModal:totalModal,
+								totalPersen:totalPersen,
+								SubtotalJual:SubtotalJual,
+								TotalHargaJual:TotalHargaJual
+							});
+							request.dispatch();
+						
+				}
+				else
+				{
+					unloadContent();
+					toastr.error("Bahan Cetakan Belum Lengkap !");
+				}
+				
+				
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridBahan()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-bahan");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				         bindBrgTable();
+				         BindGridUkuran();
+				         jQuery('.autoJml').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function bindBrgTable()
+			{
+				var arrBrng = jQuery('#<%= $this->arrBarang->getClientID()%>').val();
+				if(arrBrng != '')
+				{
+					var parsed = JSON.parse(arrBrng);
+				}
+				else
+				{
+					var parsed = [];
+					parsed.push({
+						'id': 0,
+						'text': ''
+					});
+				}
+				
+				
+				jQuery(".nmBrg").select2({allowClear: true,data: parsed,width:'300px'}).on('change', function(e) 
+				{
+					var elNm = jQuery(e.target).attr('id');
+					var i = elNm.substring(5);
+					
+					if(e.val == null || e.val == '')
+					{
+						jQuery('#'+elNm).val('');
+						jQuery("#arrHargaUkuran"+i).text('');
+						jQuery("#hargaBrg"+i).val('');
+						var valArr = [];
+							valArr.push({
+								'id': 0,
+								'text': ''
+							});
+							
+						jQuery("#ukuranBrg"+i).select2({allowClear: true,data: valArr,width: '180px'});
+					}
+					else
+					{
+						loadContent();
+						var request= <%= $this->barangCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:e.val,index:i
+							});
+							request.dispatch();
+						unloadContent();
+					}
+				});
+			}
+			
+			function BindGridUkuran()
+			{
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+					
+					var data = row.data();
+					
+					var elArr = jQuery(data[1]).attr('id');
+					var valArr = jQuery("#"+elArr).text();
+					var elUkuran = jQuery(data[2]).attr('id');
+					var valUkuran= jQuery("#"+elUkuran).val();
+					var i = elUkuran.substring(9);
+					
+					if(valArr == '')
+					{
+						var valArr = [];
+							valArr.push({
+								'id': 0,
+								'text': ''
+							});
+							
+						jQuery("#"+elUkuran).select2({allowClear: true,data: valArr,width: '180px'});
+					}
+					else
+					{
+						BindUkuranData(i,JSON.parse(valArr));
+					}
+					
+				});
+			}
+			
+			function BindUkuranData(index,obj)
+			{
+				jQuery("#arrHargaUkuran"+index).text(JSON.stringify(obj));
+				jQuery("#ukuranBrg"+index).select2({allowClear: true,data: obj,width: "180px"}).on('change', function(e) 
+				{
+					var el = jQuery(e.target).attr('id');
+					var i = el.substring(9);
+					
+					if(e.val == null || e.val == '')
+					{
+						jQuery('#'+el).val('');
+						jQuery("#hargaBrg"+i).val('');
+					}
+					else
+					{
+						loadContent();
+						var request= <%= $this->ukuranCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:e.val,index:i
+							});
+							request.dispatch();
+						unloadContent();
+					}
+				});
+				
+				
+			}
+			
+			function BindTempBahan(arrObj)
+			{
+				var Table = '';
+				if(arrObj.length > 0)
+				{
+					
+					var i = 1;
+					jQuery.each(arrObj, function(i, val) {
+					var arrHarga = JSON.stringify(val['arrHarga']);
+					Table += '<tr><td><input id="nmBrg'+i+'" class="nmBrg" type="text" Value="'+val['id_barang']+'"></td>'+
+							'<td><label id="arrHargaUkuran'+i+'" Style="Display:None;" class="arrHargaUkuran">'+arrHarga+'</label></td>'+
+							'<td><input id="ukuranBrg'+i+'" class="ukuranBrg" type="text" Value="'+val['ukuran']+'"></td>'+
+							'<td><input id="hargaBrg'+i+'" width="50px" class="form-control autoJml hargaBrg" type="text" Value="'+val['harga']+'"  disabled></td>'+
+							'<td><button type="button" id="row'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowbahan('+i+')"><i class="entypo-cancel"></i>Hapus</button></td></tr>';
+					
+					i++;
+					});
+				}
+				jQuery("#table-bahan").dataTable().fnDestroy();
+					jQuery("#table-bahan tbody").empty();
+					jQuery("#table-bahan tbody").append(Table);
+					BindGridBahan();
+			}
+			
+			function BindTempParam(arrObj)
+			{
+				var Table = '';
+				if(arrObj.length > 0)
+				{
+					
+					var i = 1;
+					jQuery.each(arrObj, function(i, val) {
+					Table += '<tr><td><input id="nmParam'+i+'" class="form-control nmParam" type="text" Value="'+val['parameter']+'"></td>'+
+							'<td><input id="hargaParam'+i+'" width="50px" Value="'+val['harga']+'" class="form-control autoJmlParam hargaParam" type="text" onChange="calculateAll()"></td>'+
+							'<td><button type="button" id="rowParam'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowparam('+i+')"><i class="entypo-cancel"></i>Hapus</button></td></tr>';
+					
+					i++;
+					});
+				}
+				
+				jQuery("#table-parameter").dataTable().fnDestroy();
+				jQuery("#table-parameter tbody").empty();
+				jQuery("#table-parameter tbody").append(Table);
+				BindGridParameter();
+					
+			}
+				
+			
+			function BindGridParameter()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-parameter");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				         jQuery('.autoJmlParam').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function editClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->editCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+			function deleteClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->deleteCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+		</script>
+		
+</com:TContent>

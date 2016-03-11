@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<application id="penjualan_new" mode="Performance">
+  <!-- alias definitions and namespace usings
+  <paths>
+    <alias id="myalias" path="./lib" />
+    <using namespace="Application.common.*" />
+  </paths>
+  -->
+
+  <!-- configurations for modules -->
+  <modules>
+		<module id="db" class="System.Data.TDataSourceConfig">
+			<database ConnectionString="mysql:host=localhost;dbname=penjualan" Username="root" Password="" />
+		</module>
+		
+		<module class="System.Data.ActiveRecord.TActiveRecordConfig" ConnectionID="db" /> 
+  
+    <!-- Remove this comment mark to enable caching
+    <module id="cache" class="System.Caching.TDbCache" />
+    -->
+
+    <!-- Remove this comment mark to enable PATH url format
+    <module id="request" class="THttpRequest" UrlFormat="Path" />
+    -->
+
+    <!-- Remove this comment mark to enable logging
+    <module id="log" class="System.Util.TLogRouter">
+      <route class="TBrowserLogRoute" Categories="System" />
+    </module>
+    -->
+    <module 
+		id="session" 
+		class="THttpSession" 
+		SessionName="SSID"
+		SavePath="protected/tmp"
+		CookieMode="Allow" 
+		UseCustomStorage="false" 
+		AutoStart="true" 
+		GcProbability="100"            
+		UseTransparentSessionID="false" 
+		TimeOut="21600" />
+		
+	<module id="auth"
+      class="Application.MyAuthManager"
+      UserManager="users" 
+      LoginPage="Login"
+	  AuthExpire="21600" />
+	  
+    <module id="users"
+      class="System.Security.TDbUserManager"
+      UserClass="Application.PageUser" 
+	  ConnectionID="db"/>
+  
+		<module id="memorylimit" class="TMemoryLimit" MemoryLimit="1G" />
+		
+  </modules>
+
+ <!-- configuration for available services -->
+  <services>
+    <service id="page" class="TPageService" DefaultPage="Login" >
+     <pages MasterClass="Application.layouts.MainLayout" Theme="neon"/>	
+    </service>
+  </services>
+
+<!-- application parameters-->
+  <parameters>
+    <parameter id="title" value="NAVARA" />
+    <parameter id="dbname" value="penjualan" />
+	<parameter id="dbuser" value="root" />
+	<parameter id="dbpass" value="" />
+  </parameters>
+ <!-- -->
+ 
+  <paths>
+	  <using namespace="Application.database.*" />
+	  <using namespace="System.Web.UI.ActiveControls.*" />
+	  <using namespace="Application.conf.*" />
+	  <using namespace="Application.modules.*"/>
+		<using namespace="Application.modules.phpmailer.*" />
+		<using namespace="Application.modules.LightWindow.*" />
+		<using namespace="Application.modules.CSHtmlArea.*" /> 
+		<using namespace="Application.modules.PWCWindow.*" />
+		<using namespace="Application.modules.Barcode.*" />
+		<using namespace="Application.modules.tcpdf.*" />
+		
+		<using namespace="Application.modules.htmltodocx.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.*" />
+		
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Section.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Section.Footer.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Section.Table.*" />
+		
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Shared.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Style.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Writer.*" />
+		<using namespace="Application.modules.htmltodocx.phpword.PHPWord.Writer.Word2007.*" />
+		
+		<using namespace="Application.modules.htmltodocx.simplehtmldom.*" />
+		<using namespace="Application.modules.htmltodocx.htmlconverter.*" />
+		<!--<using namespace="Application.modules.ChartDirector.*" />
+		<using namespace="Application.modules.vendor.autoload" />-->
+  </paths>
+  
+</application>

@@ -1,0 +1,365 @@
+<com:TContent ID="Main">
+	<h2>Laporan Buku Kas</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	
+	<div class="modal fade" id="modal-2">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Modal Awal</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="jumlah" class="control-label">Modal Penggudangan</label>
+								<com:TActiveTextBox
+										ID="modalGudang" 
+										AutoPostBack="false"
+										CssClass="form-control"
+										CausesValidation = "true"/>
+								<com:TRequiredFieldValidator 
+											ControlToValidate="modalGudang"											 
+											ErrorMessage=""
+											Display="Dynamic"
+											FocusOnError="false" 
+											CssClass="valRequired"
+											ControlCssClass="valctrl"
+											ValidationGroup="val2" />
+							</div>	
+						</div>
+						
+						<div class="col-md-6">
+							<div class="form-group">
+								<label for="jumlah" class="control-label">Modal Percetakan</label>
+								<com:TActiveTextBox
+										ID="modalPercetakan" 
+										AutoPostBack="false"
+										CssClass="form-control"
+										CausesValidation = "true"/>
+								<com:TRequiredFieldValidator 
+											ControlToValidate="modalPercetakan"											 
+											ErrorMessage=""
+											Display="Dynamic"
+											FocusOnError="false" 
+											CssClass="valRequired"
+											ControlCssClass="valctrl"
+											ValidationGroup="val2" />
+							</div>	
+						</div>
+						
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+						<com:TActiveButton
+							ID="prosesBtn" 
+							Text="Proses"
+							OnClick="prosesBtnClicked"
+							CausesValidation="true"
+							ValidationGroup="val2"
+							CssClass="btn btn-info">
+							<prop:ClientSide 
+								OnLoading="loadContent();"
+								OnComplete="unloadContent();"/>
+						</com:TActiveButton>
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="modal-3">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Bill Pembelian</h4>
+				</div>
+				
+				<div class="modal-body" style="height:500px">
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+				
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="Periode" class="control-label">Sumber Transaksi</label>
+				<com:TActiveDropDownList 
+									ID="DDTransaksi"
+									Width="190px"
+									AutoPostBack="true"
+									CausesValidation="false"
+									SelectedValue = "0"
+									OnSelectedIndexChanged = "cariBtnClicked"
+									CssClass="form-control">
+									<com:TListItem Text="Penggudangan" Value="0"/>
+									<com:TListItem Text="Percetakan" Value="1"/>
+									</com:TActiveDropDownList>	
+			</div>	
+						
+		</div>
+		
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="Periode" class="control-label">Periode</label>
+				<com:TActiveDropDownList 
+									ID="Periode"
+									Width="190px"
+									AutoPostBack="true"
+									CausesValidation="false"
+									Enabled="false"
+									SelectedValue = "0"
+									OnSelectedIndexChanged = "cariBtnClicked"
+									CssClass="form-control">
+									<com:TListItem Text="Bulanan" Value="0"/>
+									<com:TListItem Text="Tahunan" Value="1"/>
+									<com:TListItem Text="Mingguan" Value="2"/>
+									</com:TActiveDropDownList>	
+			</div>	
+						
+		</div>
+					
+	</div>
+	
+	<div class="row">
+		
+		
+		<div class="col-md-3" id="panelBulanan">
+			<div class="form-group">
+				<label for="DDBulan" class="control-label">Bulan</label>
+				<com:TActiveDropDownList 
+									ID="DDBulan"
+									Width="190px"
+									PromptText="--Pilih Bulan--"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="true"
+									CssClass="form-control">
+									<com:TListItem Text="Januari" Value="1"/>
+									<com:TListItem Text="Februari" Value="2"/>
+									<com:TListItem Text="Maret" Value="3"/>
+									<com:TListItem Text="April" Value="4"/>
+									<com:TListItem Text="Mei" Value="5"/>
+									<com:TListItem Text="Juni" Value="6"/>
+									<com:TListItem Text="Juli" Value="7"/>
+									<com:TListItem Text="Agustus" Value="8"/>
+									<com:TListItem Text="September" Value="9"/>
+									<com:TListItem Text="Oktober" Value="10"/>
+									<com:TListItem Text="November" Value="11"/>
+									<com:TListItem Text="Desember" Value="12"/>
+									</com:TActiveDropDownList>
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3" id="panelTahunan">
+			<div class="form-group">
+				<label for="DDTahun" class="control-label">Tahun</label>
+				<com:TActiveDropDownList 
+									ID="DDTahun"
+									Width="190px"
+									PromptText="--Pilih Tahun--"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="true"
+									CssClass="form-control"
+									DataTextField="nama"
+									DataValueField="id">
+									</com:TActiveDropDownList>
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3" id="panelMingguan" Style="Display:None;">
+			<div class="form-group">
+				<label for="mingguan" class="control-label">Mingguan</label>
+				<com:TActiveTextBox 
+					ID="mingguan" 
+					CssClass="form-control daterange"
+					AutoPostback="false"/>
+			</div>	
+							
+		</div>
+					
+	</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" class="btn btn-blue btn-icon" OnClick="cariClicked()">
+								Cari
+								<i class="entypo-search"></i>
+							</button>
+			</div>
+		</div>				
+	</div>
+	
+
+	
+	<div class="row">	
+		<div class="col-md-12">
+		<div class="form-group">
+			<com:TActiveHiddenField ID="arrPembelian"/>
+			<table class="table table-bordered datatable" id="table-1">
+				<thead>
+					<tr>
+						<th width="300px">Tanggal</th>
+						<th width="300px">Keterangan</th>
+						<th width="300px">Debet</th>
+						<th width="300px">Kredit</th>
+						<th width="150px">Saldo</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="cariCallback" OnCallback="cariBtnClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="detailCallback" OnCallback="detailClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="cetakCallback" OnCallback="cetakBill" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="postingCallback" OnCallback="postingClicked" ActiveControl.CausesValidation="false"/>
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				jQuery('#<%= $this->modalGudang->getClientID()%>').autoNumeric('init');
+				jQuery('#<%= $this->modalPercetakan->getClientID()%>').autoNumeric('init');
+				
+				var request= <%= $this->cariCallback->ActiveControl->Javascript %>;
+				request.dispatch();
+			});
+			
+			function cariClicked()
+			{
+				loadContent();
+				var request= <%= $this->cariCallback->ActiveControl->Javascript %>;
+				request.dispatch();
+				unloadContent();
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridDetail()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#tableDetail");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function detailClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->detailCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function cetakClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->cetakCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function postingClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->postingCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+		</script>
+		
+</com:TContent>

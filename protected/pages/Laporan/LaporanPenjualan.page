@@ -1,0 +1,457 @@
+<com:TContent ID="Main">
+	<h2>Laporan Penjualan</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	
+	<div class="modal fade" id="modal-2">
+		<div class="modal-dialog" style="width:70%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Detail Transaksi</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<table class="table table-bordered datatable" id="tableDetail">
+									<thead>
+										<tr>
+											<th width="300px">Nama Barang</th>
+											<th width="300px">Jumlah</th>
+											<th width="300px">Harga</th>
+											<th width="300px">Diskon</th>
+											<th width="150px">Subtotal</th>
+											<th width="150px">Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+							</table>
+							</div>	
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade" id="modal-3">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Bill Penjualan</h4>
+				</div>
+				
+				<div class="modal-body" style="height:500px">
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+				
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="Periode" class="control-label">Periode</label>
+				<com:TActiveDropDownList 
+									ID="Periode"
+									Width="190px"
+									AutoPostBack="true"
+									CausesValidation="false"
+									SelectedValue = "0"
+									OnSelectedIndexChanged = "periodeChanged"
+									CssClass="form-control">
+									<com:TListItem Text="Bulanan" Value="0"/>
+									<com:TListItem Text="Tahunan" Value="1"/>
+									<com:TListItem Text="Mingguan" Value="2"/>
+									</com:TActiveDropDownList>	
+			</div>	
+						
+		</div>
+					
+	</div>
+	
+	<div class="row">
+		
+		
+		<div class="col-md-3" id="panelBulanan">
+			<div class="form-group">
+				<label for="DDBulan" class="control-label">Bulan</label>
+				<com:TActiveDropDownList 
+									ID="DDBulan"
+									Width="190px"
+									PromptText="--Pilih Bulan--"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="true"
+									CssClass="form-control">
+									<com:TListItem Text="Januari" Value="1"/>
+									<com:TListItem Text="Februari" Value="2"/>
+									<com:TListItem Text="Maret" Value="3"/>
+									<com:TListItem Text="April" Value="4"/>
+									<com:TListItem Text="Mei" Value="5"/>
+									<com:TListItem Text="Juni" Value="6"/>
+									<com:TListItem Text="Juli" Value="7"/>
+									<com:TListItem Text="Agustus" Value="8"/>
+									<com:TListItem Text="September" Value="9"/>
+									<com:TListItem Text="Oktober" Value="10"/>
+									<com:TListItem Text="November" Value="11"/>
+									<com:TListItem Text="Desember" Value="12"/>
+									</com:TActiveDropDownList>
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3" id="panelTahunan">
+			<div class="form-group">
+				<label for="DDTahun" class="control-label">Tahun</label>
+				<com:TActiveDropDownList 
+									ID="DDTahun"
+									Width="190px"
+									PromptText="--Pilih Tahun--"
+									PromptValue="empty"
+									AutoPostBack="false"
+									CausesValidation="true"
+									CssClass="form-control"
+									DataTextField="nama"
+									DataValueField="id">
+									</com:TActiveDropDownList>
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3" id="panelMingguan" Style="Display:None;">
+			<div class="form-group">
+				<label for="mingguan" class="control-label">Mingguan</label>
+				<com:TActiveTextBox 
+					ID="mingguan" 
+					CssClass="form-control daterange"
+					AutoPostback="false"/>
+			</div>	
+							
+		</div>
+					
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" class="btn btn-blue btn-icon" OnClick="cariClicked()">
+								Cari
+								<i class="entypo-search"></i>
+							</button>
+			</div>
+		</div>				
+	</div>
+	
+
+	
+	<div class="row">	
+		<div class="col-md-12">
+		<div class="form-group">
+			<com:TActiveHiddenField ID="arrPembelian"/>
+			<table class="table table-bordered datatable" id="table-1">
+				<thead>
+					<tr>
+						<th width="300px">Tanggal Transaksi</th>
+						<th width="300px">Waktu Transaksi</th>
+						<th width="300px">Jenis Pelanggan</th>
+						<th width="300px">Nama Pelanggan</th>
+						<th width="300px">Jumlah Item</th>
+						<th width="150px">Total Transaksi</th>
+						<th width="150px">Aksi</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="cariCallback" OnCallback="cariBtnClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="detailCallback" OnCallback="detailClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="cetakCallback" OnCallback="cetakBill" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="postingCallback" OnCallback="postingClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="editCallback" OnCallback="simpanPerubahanClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="hapusDetailCallback" OnCallback="hapusDetailClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="hapusCallback" OnCallback="hapusClicked" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				var request= <%= $this->cariCallback->ActiveControl->Javascript %>;
+				request.dispatch();
+				BindGridDetail();
+			});
+			
+			function cariClicked()
+			{
+				loadContent();
+				var request= <%= $this->cariCallback->ActiveControl->Javascript %>;
+				request.dispatch();
+				unloadContent();
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridDetail()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#tableDetail");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				        jQuery('.autoJml').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridBahan()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-bahan");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridParameter()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-parameter");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function detailClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->detailCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function cetakClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->cetakCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function postingClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->postingCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function calculateClicked(id)
+			{
+				var jml = jQuery("#jmlBrgDet"+id).val();
+				var harga = jQuery("#labelHarga"+id).text();
+				var diskon = jQuery("#diskonBrgDet"+id).val();
+				jml = accounting.unformat(jml, ",");
+				harga = accounting.unformat(harga); 
+				diskon = accounting.unformat(diskon); 
+				
+				if(jml > 0 && harga > 0)
+				{
+					var subtotal = (jml * harga) - diskon;
+					subtotal = accounting.formatNumber(subtotal, 2, ",");
+					console.log(subtotal);
+					jQuery("#labelTotal"+id).text(subtotal);
+				}
+			}
+			
+			function editClicked(id)
+			{
+				var jml = jQuery("#jmlBrgDet"+id).val();
+				var harga = jQuery("#labelHarga"+id).text();
+				var diskon = jQuery("#diskonBrgDet"+id).val();
+				jml = accounting.unformat(jml, ",");
+				harga = accounting.unformat(harga); 
+				diskon = accounting.unformat(diskon); 
+				var subtotal = (jml * harga) - diskon;
+				
+				loadContent();
+					var request= <%= $this->editCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id,jml:jml,harga:harga,diskon:diskon,subtotal:subtotal
+						});
+						request.dispatch();
+			}
+			
+			function hapusDetailClicked(id)
+			{
+				
+				loadContent();
+					var request= <%= $this->hapusDetailCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+			function hapusClicked(id)
+			{
+				loadContent();
+					var request= <%= $this->hapusCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:id
+						});
+						request.dispatch();
+			}
+			
+		</script>
+		
+</com:TContent>

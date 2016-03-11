@@ -1,0 +1,1059 @@
+<com:TContent ID="Main">
+	<h2>Transaksi Percetakan</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	
+	<div class="modal fade" id="modal-3">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Bill Penjualan</h4>
+				</div>
+				
+				<div class="modal-body" style="height:500px">
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<com:TActiveButton
+					ID="submitBtn" 
+					Text="Submit"
+					OnClick="submitBtnClicked"
+					CausesValidation="true"
+					ValidationGroup="val"
+					CssClass="btn btn-green">
+					<prop:ClientSide 
+						OnLoading="loadContent();"
+						OnComplete="unloadContent();"/>
+				</com:TActiveButton>
+			</div>
+		</div>	
+	</div>
+	
+								
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="jns_transaksi" class="control-label">Jenis Transaksi</label>
+				<com:TActiveDropDownList
+						ID="jns_transaksi" 
+						AutoPostBack="false"
+						SelectedValue="0"
+						CausesValidation = "true">
+						<com:TListItem Text="Member/Reguler" value="0"/>
+						<com:TListItem Text="OTC" value="1" />
+				</com:TActiveDropDownList>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="jns_transaksi"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							InitialValue="empty"
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="pelanggan" class="control-label">Pelanggan</label>
+				<div id="PanelDDPelanggan">
+				<com:TActiveDropDownList
+						ID="DDPelanggan" 
+						PromptValue="empty"
+						AutoPostBack="false"
+						DataTextField="nama"
+						DataValueField="id"
+						CausesValidation = "true">
+				</com:TActiveDropDownList>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="DDPelanggan"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							InitialValue="empty"
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+				</div>		
+				<com:TActiveTextBox
+						ID="nmPelanggan" 
+						AutoPostBack="false"
+						CssClass="form-control"
+						Enabled = "false"
+						CausesValidation = "true">
+				</com:TActiveTextBox>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="nmPelanggan"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+			</div>	
+							
+		</div>
+					
+	</div>
+	
+	<div class="modal fade" id="modal-1">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Tambah Barang Cetak</h4>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">	
+						<div class="col-md-3">
+							<div class="form-group">
+								<label for="nmCetakan" class="control-label">Nama Cetakan</label>
+								<com:TActiveHiddenField ID="index"/>
+								<com:TActiveTextBox
+									ID="nmCetakan" 
+									AutoPostBack="false"
+									CssClass="form-control"
+									CausesValidation = "true">
+							</com:TActiveTextBox>
+									<com:TRequiredFieldValidator 
+										ControlToValidate="nmCetakan"											 
+										ErrorMessage=""
+										Display="Dynamic"
+										FocusOnError="false" 
+										CssClass="valRequired"
+										ControlCssClass="valctrl"
+										ValidationGroup="val2" />
+							</div>
+						</div>
+					</div>
+					<div class="row">	
+						<div class="col-md-12">
+							<div class="form-group">
+								
+								<button type="button" class="btn btn-blue" OnClick="addRowBahan();">Tambah Bahan</button>
+								<table class="table table-bordered table-striped datatable" id="table-bahan">
+									<thead>
+										<tr>
+											<th width="200px">Nama Bahan</th>
+											<th width="50px">Stok</th>
+											<th width="50px">Jumlah</th>
+											<th width="50px">Ukuran</th>
+											<th width="50px">Harga/Potong</th>
+											<th width="50px">Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>	
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<button type="button" class="btn btn-blue" OnClick="addRowParam();">Tambah Parameter</button>
+								<table class="table table-bordered table-striped datatable" id="table-parameter">
+									<thead>
+										<tr>
+											<th width="200px">Parameter</th>
+											<th width="50px">Harga</th>
+											<th width="50px">Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="JnsTinta" class="control-label">Jenis Tinta</label>
+								<com:TActiveDropDownList
+									ID="JnsTinta" 
+									AutoPostBack="false"
+									CssClass="form-control"
+									CausesValidation = "false">
+									<com:TListItem Text="Xerox @ 1 Sisi" Value="0"/>
+									<com:TListItem Text="Xerox @ 2 Sisi" Value="1"/>
+									<com:TListItem Text="Inkjet @ 1 Sisi" Value="2"/>
+									<com:TListItem Text="Inkjet @ 2 Sisi" Value="3"/>
+								</com:TActiveDropDownList>
+								<com:TActiveTextBox
+									ID="hrgTinta" 
+									Attributes.PlaceHolder="Harga Tinta"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="JnsLaminasi" class="control-label">Laminasi</label>
+								<com:TActiveDropDownList
+									ID="JnsLaminasi" 
+									AutoPostBack="false"
+									CssClass="form-control"
+									CausesValidation = "false">
+									<com:TListItem Text="DOFF @ 1 Sisi" Value="0"/>
+									<com:TListItem Text="DOFF @ 2 Sisi" Value="1"/>
+									<com:TListItem Text="GLOSSY @ 1 Sisi" Value="2"/>
+									<com:TListItem Text="GLOSSY @ 2 Sisi" Value="3"/>
+								</com:TActiveDropDownList>
+								<com:TActiveTextBox
+									ID="hrgLaminasi" 
+									Attributes.PlaceHolder="Harga Laminasi"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="spiralUkuran" class="control-label">Spiral</label>
+								<com:TActiveTextBox
+									ID="spiralUkuran" 
+									Attributes.PlaceHolder="Spiral"
+									CssClass="form-control"
+									CausesValidation = "false"/>
+								<com:TActiveTextBox
+									ID="hrgSpiral" 
+									Attributes.PlaceHolder="Harga"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="jnsHotprint" class="control-label">Hotprint</label>
+								<com:TActiveTextBox
+									ID="jnsHotprint" 
+									Attributes.PlaceHolder="Hotprint"
+									CssClass="form-control"
+									CausesValidation = "false"/>
+								<com:TActiveTextBox
+									ID="hrgHotprint" 
+									Attributes.PlaceHolder="Harga"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="totalModal" class="control-label">Total Modal</label>
+								<com:TActiveTextBox
+									ID="totalModal" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="Total Modal"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="persen" class="control-label">10 %</label>
+								<com:TActiveTextBox
+									ID="persen" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="10 %"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+					</div>
+					
+					<div class="row">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="jmlPesanan" class="control-label">Jumlah Pesanan</label>
+								<com:TActiveTextBox
+									ID="jmlPesanan" 
+									Attributes.PlaceHolder="Jumlah Pesanan"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="estHari" class="control-label">Estimasi Hari</label>
+								<com:TActiveTextBox
+									ID="estHari" 
+									Attributes.PlaceHolder="Hari"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="tuntutanHari" class="control-label">Tuntutan Hari</label>
+								<com:TActiveTextBox
+									ID="tuntutanHari" 
+									Attributes.PlaceHolder="Hari"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="lembur" class="control-label">Tambahan Lembur (%)</label>
+								<com:TActiveTextBox
+									ID="lembur" 
+									Attributes.PlaceHolder="%"
+									Attributes.OnChange="calculateAll();"
+									CssClass="form-control"
+									width="50px"
+									CausesValidation = "false"/> 
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="totalModal" class="control-label">Total Harga Jual</label>
+								<com:TActiveTextBox
+									ID="totalHrgJual" 
+									ReadOnly="true"
+									Text="0.00"
+									Attributes.PlaceHolder="Total Harga jual"
+									CssClass="form-control hargaClass"
+									CausesValidation = "false"/>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+						<com:TActiveButton
+						ID="tambahCtknBtn" 
+						Text="Proses"
+						OnClick="tambahBtnClicked"
+						CausesValidation="true"
+						ValidationGroup="val2"
+						CssClass="btn btn-green">
+						<prop:ClientSide 
+							OnLoading="loadContent();"/>
+					</com:TActiveButton>
+				
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" onclick="jQuery('#modal-1').modal('show');clearForm();" class="btn btn-info btn-icon icon-left"><i class="entypo-plus" ></i>Tambah</button>
+				<com:TActiveButton
+					ID="tambahBtn" 
+					Text="Tambah"
+					Visible="false"
+					OnClick="tambahBtnClicked"
+					CausesValidation="true"
+					ValidationGroup="val2"
+					CssClass="btn btn-info">
+					<prop:ClientSide 
+						OnLoading="loadContent();"
+						OnComplete="unloadContent();"/>
+				</com:TActiveButton>
+			</div>
+		</div>	
+	</div>
+	
+	<com:TActiveHiddenField ID="arrBarang"/>
+	<div class="row">	
+		<div class="col-md-12">
+			<div class="form-group">
+			<com:TActiveHiddenField ID="arrCetakan"/>
+				<table class="table table-bordered table-striped datatable" id="table-1">
+					<thead>
+						<tr>
+							<th width="200px">Nama Cetakan</th>
+							<th width="50px">Jumlah Pesanan</th>
+							<th width="50px">Estimasi Hari</th>
+							<th width="50px">Tuntutan Hari</th>
+							<th width="50px">Harga Cetakan</th>
+							<th width="50px">Aksi</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="barangCallback" OnCallback="barangChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="ukuranCallback" OnCallback="ukuranChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="deleteCallback" OnCallback="deleteData" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="submitCallback" OnCallback="submitBtnClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="cekStokCallback" OnCallback="cekStok" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="tambahCallback" OnCallback="prosesTambah" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="editCallback" OnCallback="editData" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				jQuery('.hargaClass').autoNumeric('init');
+				jQuery('#<%= $this->jmlPesanan->getClientID()%>').numeric({ decimal : ".",  negative : false, scale: 2 });
+				jQuery('#<%= $this->tuntutanHari->getClientID()%>').numeric({ decimal : ".",  negative : false, scale: 2 });
+				jQuery('#<%= $this->lembur->getClientID()%>').numeric({ decimal : ".",  negative : false, scale: 2 });
+				jQuery('#<%= $this->nmPelanggan->getClientID()%>').hide();
+				jQuery('#<%= $this->DDPelanggan->getClientID()%>').select2({allowClear: true}).on('change', function(e) 
+				{
+					if(e.val == null)
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').val('empty');
+				});
+				
+				jQuery('#<%= $this->jns_transaksi->getClientID()%>').select2({allowClear: false}).on('change', function(e) 
+				{
+					if(e.val == 0)
+					{
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').prop('disabled',false);
+						jQuery('#PanelDDPelanggan').show();
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').prop('disabled',true);
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').hide();
+					}
+					else
+					{
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').prop('disabled',true);
+						jQuery('#PanelDDPelanggan').hide();
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').prop('disabled',false);
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').show();
+					}
+				});
+				
+				BindGrid();
+				BindGridBahan();
+				BindGridParameter();
+			});
+			
+			
+			function clearForm()
+			{
+				jQuery('#<%= $this->index->getClientID()%>').val('');
+				jQuery('#<%= $this->nmCetakan->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgTinta->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgSpiral->getClientID()%>').val('');
+				jQuery('#<%= $this->hrgHotprint->getClientID()%>').val('');
+				jQuery('#<%= $this->spiralUkuran->getClientID()%>').val('');
+				jQuery('#<%= $this->jnsHotprint->getClientID()%>').val('');
+				jQuery('#<%= $this->totalModal->getClientID()%>').val('0.00');
+				jQuery('#<%= $this->persen->getClientID()%>').val('0.00');
+				jQuery('#<%= $this->jmlPesanan->getClientID()%>').val('');
+				jQuery('#<%= $this->estHari->getClientID()%>').val('');
+				jQuery('#<%= $this->tuntutanHari->getClientID()%>').val('');
+				jQuery('#<%= $this->lembur->getClientID()%>').val('');
+				jQuery('#<%= $this->totalHrgJual->getClientID()%>').val('0.00');
+				jQuery("#table-bahan").dataTable().fnDestroy();
+				jQuery("#table-bahan tbody").empty();
+				jQuery("#table-bahan tbody").append("");
+				jQuery("#table-parameter").dataTable().fnDestroy();
+				jQuery("#table-parameter tbody").empty();
+				jQuery("#table-parameter tbody").append("");
+				BindGridBahan();
+				BindGridParameter();
+			}
+			
+			function addRowBahan()
+			{
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="nmBrg'+i+'" class="nmBrg" type="text" >',
+					'<label id="stokBrg'+i+'"></label>',
+					'<input id="jumlahBrg'+i+'" width="50px" type="text" class="form-control autoJml" data-a-sep="." data-a-dec=","  onChange="cekStok('+i+')" />',
+					'<input id="ukuranBrg'+i+'" class="form-control" type="text" >',
+					'<input id="hargaBrg'+i+'" width="50px" class="form-control autoJml" type="text" onChange="calculateAll()">',
+					'<button type="button" id="row'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowbahan('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRowbahan(id)
+			{
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				var rowId = jQuery("#row"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+			}
+			
+			function cekStok(i)
+			{
+				var stok = jQuery("#stokBrg"+i).text();
+				var jumlah = accounting.unformat(jQuery("#jumlahBrg"+i).val(),",");
+				if(stok < jumlah)
+				{
+					jQuery("#jumlahBrg"+i).val('');
+				}
+			}
+			
+			function addRowParam()
+			{
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="nmParam'+i+'" class="form-control" type="text" >',
+					'<input id="hargaParam'+i+'" width="50px" class="form-control autoJmlParam" type="text" onChange="calculateAll()">',
+					'<button type="button" id="rowParam'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRowparam('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRowparam(id)
+			{
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				var rowId = jQuery("#rowParam"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+			}
+			
+			function calculateAll()
+			{
+				var TotalBahan = calculateBahan();
+				var TotalParam = calculateParam();
+				var hargaTinta = accounting.unformat(jQuery('#<%= $this->hrgTinta->getClientID()%>').val());
+				var hargaLaminasi = accounting.unformat(jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val());
+				var hargaSpiral = accounting.unformat(jQuery('#<%= $this->hrgSpiral->getClientID()%>').val());
+				var hargaHotprint = accounting.unformat(jQuery('#<%= $this->hrgHotprint->getClientID()%>').val());
+				var modal = accounting.unformat(jQuery('#<%= $this->totalModal->getClientID()%>').val());
+				var sepuluhPersen = accounting.unformat(jQuery('#<%= $this->persen->getClientID()%>').val());
+				var jmlPesanan = parseInt(jQuery('#<%= $this->jmlPesanan->getClientID()%>').val());
+				var estHari = parseInt(jQuery('#<%= $this->estHari->getClientID()%>').val());
+				var ttHari = parseInt(jQuery('#<%= $this->tuntutanHari->getClientID()%>').val());
+				var lembur = accounting.unformat(jQuery('#<%= $this->lembur->getClientID()%>').val());
+				var totalModal = 0;
+				var TotalHargaJual = 0;
+				
+				totalModal = TotalBahan + hargaTinta + hargaLaminasi + hargaSpiral + hargaHotprint + TotalParam;
+				tempPersen = totalModal * (0.1);
+				totalPersen = totalModal + tempPersen;
+				
+				TotalHargaJual = totalPersen * jmlPesanan;
+				
+				if(estHari > ttHari)
+				{
+					var selisihHari = estHari - ttHari;
+					var tempLembur = TotalHargaJual * (lembur / 100);
+					var totalLembur = tempLembur * selisihHari;
+					console.log(totalLembur);
+				}
+				else
+				{
+					var totalLembur = 0;
+				}
+				
+				TotalHargaJual = TotalHargaJual + totalLembur;
+				
+				totalModal = accounting.formatNumber(totalModal, 2, ",");
+				totalPersen = accounting.formatNumber(totalPersen, 2, ",");
+				TotalHargaJual = accounting.formatNumber(TotalHargaJual, 2, ",");
+				
+				jQuery('#<%= $this->totalModal->getClientID()%>').val(totalModal)
+				jQuery('#<%= $this->persen->getClientID()%>').val(totalPersen)
+				
+				jQuery('#<%= $this->totalHrgJual->getClientID()%>').val(TotalHargaJual);
+			}
+			
+			function calculateBahan()
+			{
+				var HargaBahan = 0;
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+				
+					var data = row.data();
+					
+					var elHarga = jQuery(data[4]).attr('id');
+					var valHarga= jQuery("#"+elHarga).val();
+					
+					valHarga = accounting.unformat(valHarga); 
+					HargaBahan = HargaBahan + valHarga;
+					
+				});
+				return HargaBahan;
+				//jQuery('#<%= $this->totalHrgJual->getClientID()%>').val(HargaBahan);
+			}
+			
+			function calculateParam()
+			{
+				var HargaParam = 0;
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+				
+					var data = row.data();
+					
+					var elHarga = jQuery(data[1]).attr('id');
+					var valHarga= jQuery("#"+elHarga).val();
+					
+					valHarga = accounting.unformat(valHarga); 
+					HargaParam = HargaParam + valHarga;
+					
+				});
+				return HargaParam;
+				//jQuery('#<%= $this->totalHrgJual->getClientID()%>').val(HargaParam);
+			}
+			
+			function tambahClicked()
+			{
+				var arrBahan = [];
+				var TotalBahan = 0;
+				var tableContainer = jQuery("#table-bahan").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+				 
+					var data = row.data();
+					
+					var elNm = jQuery(data[0]).attr('id');
+					var valNm = jQuery("#"+elNm).val();
+					
+					var elStok = jQuery(data[1]).attr('id');
+					var valStok = jQuery("#"+elStok).html();
+					
+					var elJumlah = jQuery(data[2]).attr('id');
+					var valJumlah = jQuery("#"+elJumlah).val();
+					
+					var elUkuran = jQuery(data[3]).attr('id');
+					var valUkuran= jQuery("#"+elUkuran).val();
+					
+					var elHarga = jQuery(data[4]).attr('id');
+					var valHarga= jQuery("#"+elHarga).val();
+					
+					valJumlah = accounting.unformat(valJumlah, ",");
+					valHarga = accounting.unformat(valHarga); 
+					
+					if(valNm != '' && valJumlah > 0 && valHarga > 0 && valUkuran != '')
+					{
+						TotalBahan = TotalBahan + valHarga;
+						arrBahan.push({
+						'idBahan': valNm,
+						'stokBahan': valStok,
+						'jmlBahan': valJumlah,
+						'ukuranBahan': valUkuran,
+						'hargaBahan': valHarga
+					});
+					// ... do something with data(), or row.node(), etc
+					} 
+					
+				});
+				
+				
+				var arrParam = [];
+				var TotalParam = 0;
+				var tableContainer = jQuery("#table-parameter").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+					
+					var data = row.data();
+					
+					var elNm = jQuery(data[0]).attr('id');
+					var valNm = jQuery("#"+elNm).val();
+					
+					var elHarga = jQuery(data[1]).attr('id');
+					var valHarga = jQuery("#"+elHarga).val();
+			
+					valHarga = accounting.unformat(valHarga); 
+					
+					if(valNm != '' && valHarga > 0)
+					{
+						TotalParam = TotalParam + valHarga;
+						arrParam.push({
+						'nmParam': valNm,
+						'hargaParam': valHarga
+					});
+					// ... do something with data(), or row.node(), etc
+					} 
+					
+				});
+				
+				var nmCetakan = jQuery('#<%= $this->nmCetakan->getClientID()%>').val();
+				var hargaTinta = accounting.unformat(jQuery('#<%= $this->hrgTinta->getClientID()%>').val());
+				var hargaLaminasi = accounting.unformat(jQuery('#<%= $this->hrgLaminasi->getClientID()%>').val());
+				var hargaSpiral = accounting.unformat(jQuery('#<%= $this->hrgSpiral->getClientID()%>').val());
+				var hargaHotprint = accounting.unformat(jQuery('#<%= $this->hrgHotprint->getClientID()%>').val());
+				var modal = accounting.unformat(jQuery('#<%= $this->totalModal->getClientID()%>').val());
+				var sepuluhPersen = accounting.unformat(jQuery('#<%= $this->persen->getClientID()%>').val());
+				var jmlPesanan = parseInt(jQuery('#<%= $this->jmlPesanan->getClientID()%>').val());
+				var estHari = parseInt(jQuery('#<%= $this->estHari->getClientID()%>').val());
+				var ttHari = parseInt(jQuery('#<%= $this->tuntutanHari->getClientID()%>').val());
+				var lembur = accounting.unformat(jQuery('#<%= $this->lembur->getClientID()%>').val());
+				var totalModal = 0;
+				var TotalHargaJual = 0;
+				
+				totalModal = TotalBahan + hargaTinta + hargaLaminasi + hargaSpiral + hargaHotprint + TotalParam;
+				tempPersen = totalModal * (0.1);
+				totalPersen = totalModal + tempPersen;
+				
+				TotalHargaJual = totalPersen * jmlPesanan;
+				
+				if(estHari > ttHari)
+				{
+					var selisihHari = estHari - ttHari;
+					var tempLembur = TotalHargaJual * (lembur / 100);
+					var totalLembur = tempLembur * selisihHari;
+				}
+				else
+				{
+					var totalLembur = 0;
+				}
+				
+				TotalHargaJual = TotalHargaJual + totalLembur;
+				
+				console.log(arrBahan);
+				console.log(arrParam);
+				if(arrBahan.length > 0)
+				{
+					loadContent();
+					var request= <%= $this->tambahCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+								nmCetakan:nmCetakan,
+								arrBahan:arrBahan,
+								arrParam:arrParam,
+								hargaTinta:hargaTinta,
+								hargaLaminasi:hargaLaminasi,
+								hargaSpiral:hargaSpiral,
+								hargaHotprint:hargaHotprint,
+								totalModal:totalModal,
+								totalPersen:totalPersen,
+								jmlPesanan:jmlPesanan,
+								estHari:estHari,
+								ttHari:ttHari,
+								lembur:lembur,
+								TotalHargaJual:TotalHargaJual
+							});
+							request.dispatch();
+						
+				}
+				else
+				{
+					unloadContent();
+					toastr.error("Bahan Cetakan Belum Lengkap !");
+				}
+				
+				
+			}
+			
+			function saveRows()
+			{
+				var arrCetakan = [];
+				var tableContainer = jQuery("#table-1").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+				 
+					var data = row.data();
+					
+					var elNm = jQuery(data[0]).attr('id');
+					var valNm = jQuery("#"+elNm).val();
+					
+					var elUkuran = jQuery(data[2]).attr('id');
+					var valUkuran= jQuery("#"+elUkuran).val();
+					
+					var elJml = jQuery(data[3]).attr('id');
+					var valJml= jQuery("#"+elJml).val();
+					
+					var elHarga = jQuery(data[4]).attr('id');
+					var valHarga= jQuery("#"+elHarga).val();
+					
+					var elDiskon = jQuery(data[5]).attr('id');
+					var valDiskon= jQuery("#"+elDiskon).val();
+					
+					valJml = accounting.unformat(valJml, ",");
+					valHarga = accounting.unformat(valHarga); 
+					valDiskon = accounting.unformat(valDiskon); 
+					
+					if(valNm != '' && valJml > 0 && valHarga > 0 )
+					{
+						var subtotal = (valJml * valHarga) - valDiskon;
+						arrCetakan.push({
+						'idBarang': valNm,
+						'idHarga': valUkuran,
+						'jumlah': valJml,
+						'harga': valHarga,
+						'diskon':valDiskon,
+						'subtotal': subtotal,
+					});
+					// ... do something with data(), or row.node(), etc
+					} 
+					
+				});
+				
+				if(arrCetakan.length > 0)
+				{
+					console.log(arrCetakan);
+					jQuery("#arrCetakan").val(arrCetakan);
+					loadContent();
+					var request= <%= $this->submitCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+								arr:arrCetakan
+							});
+							request.dispatch();
+						
+				}
+				else
+				{
+					toastr.error("Barang Yang Akan Dijual Belum Dimasukkan!");
+				}
+			}
+			
+			function bindBrgTable()
+			{
+				var arrBrng = jQuery('#<%= $this->arrBarang->getClientID()%>').val();
+				if(arrBrng != '')
+				{
+					var parsed = JSON.parse(arrBrng);
+				}
+				else
+				{
+					var parsed = [];
+					parsed.push({
+						'id': 0,
+						'text': ''
+					});
+				}
+				
+				
+				jQuery(".nmBrg").select2({allowClear: true,data: parsed,width:'300px'}).on('change', function(e) 
+				{
+					jQuery('#stokBrg'+i).text('');
+					jQuery('#jumlahBrg'+i).val('');
+					
+					var elNm = jQuery(e.target).attr('id');
+					var i = elNm.substring(5);
+					console.log(elNm);
+					console.log(i);
+					if(e.val == null || e.val == '')
+					{
+						jQuery('#'+elNm).val('');
+					}
+					else
+					{
+						loadContent();
+						var request= <%= $this->barangCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:e.val,index:i
+							});
+							request.dispatch();
+						unloadContent();
+					}
+					
+					
+					
+				});
+			}
+			
+			function bindUkuran()
+			{
+				var tableContainer = jQuery("#table-1").DataTable();
+				tableContainer.rows().eq(0).each( function ( index ) {
+					var row = tableContainer.row( index );
+				 
+					var data = row.data();
+					
+					var elNm = jQuery(data[0]).attr('id');
+					var valNm = jQuery("#"+elNm).val();
+					var i = elNm.substring(5);
+					if(valNm == '')
+					{
+						var ukuran = [];
+						ukuran.push({
+							'id': 0,
+							'text': ''
+						});
+						jQuery('#ukuranBrg'+i).select2({allowClear: true,data: ukuran,width: '100px'});
+					} 
+					
+				});
+				
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridBahan()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-bahan");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				         bindBrgTable();
+				         jQuery('.autoJml').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function BindGridParameter()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-parameter");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				         jQuery('.autoJmlParam').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function editClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->editCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+			function deleteClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->deleteCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+		</script>
+		
+</com:TContent>

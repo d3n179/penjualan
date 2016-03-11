@@ -1,0 +1,220 @@
+<com:TContent ID="Main">
+	<h2>Transaksi Luar</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" class="btn btn-blue" OnClick="addRow();">Tambah Baris</button>
+				<button type="button" class="btn btn-green" OnClick="saveRows();">Submit</button>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="row">	
+		<div class="col-md-12">
+		<div class="form-group">
+			<com:TActiveHiddenField ID="arrBarang"/>
+			<com:TActiveHiddenField ID="arrPembelian"/>
+			<table class="table table-bordered table-striped datatable" id="table-1" width="100%">
+				<thead>
+					<tr>
+						<th width="20%">Tgl Transaksi</th>
+						<th width="20%">Sumber Transaksi</th>
+						<th width="20%">Jenis Transaksi</th>
+						<th width="20%">Keterangan</th>
+						<th width="20%">Jumlah Transaksi</th>
+						<th width="20%">Aksi</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="deleteCallback" OnCallback="deleteData" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="pemasokCallback" OnCallback="pemasokChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="submitCallback" OnCallback="submitBtnClicked" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{	
+				BindGrid();
+			});
+			
+			function addRow()
+			{
+				var tableContainer = jQuery("#table-1").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="tglTransaksi'+i+'" class="form-control tglTransaksi daterange" type="text" >',
+					'<input id="sumberTransaksi'+i+'" class="form-control sumberTransaksi" type="text" >',
+					'<input id="jnsTransaksi'+i+'" class="form-control jnsTransaksi" type="text" >',
+					'<input id="keteranganTransaksi'+i+'" class="form-control keteranganTransaksi" type="text" >',
+					'<input id="jmlTransaksi'+i+'" class="form-control autoJml jmlTransaksi" type="text"">',
+					'<button type="button" id="row'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRow('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRow(id)
+			{
+				var tableContainer = jQuery("#table-1").DataTable();
+				var rowId = jQuery("#row"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+			}
+			
+			function saveRows()
+			{
+				var arrTransaksi = [];
+				var tableContainer = jQuery("#table-1").dataTable();
+				jQuery(tableContainer.fnGetNodes()).each(function(row) {
+					
+					var elTglTransaksi = jQuery(this).find('td .tglTransaksi');
+					var valTglTransaksi = jQuery(elTglTransaksi[0]).val();
+					
+					var elSmbTransaksi = jQuery(this).find('td .sumberTransaksi');
+					var valSmbTransaksi = jQuery(elSmbTransaksi[1]).val();
+					
+					var elJnsTransaksi = jQuery(this).find('td .jnsTransaksi');
+					var valJnsTransaksi = jQuery(elJnsTransaksi[1]).val();
+					
+					var elKetTransaksi = jQuery(this).find('td .keteranganTransaksi');
+					var valKetTransaksi = jQuery(elKetTransaksi[0]).val();
+					
+					var elJmlTransaksi = jQuery(this).find('td .jmlTransaksi');
+					var valJmlTransaksi = jQuery(elJmlTransaksi[0]).val();
+					
+					valJmlTransaksi = accounting.unformat(valJmlTransaksi); 
+					console.log(valTglTransaksi);
+					console.log(valSmbTransaksi);
+					console.log(valJnsTransaksi);
+					console.log(valKetTransaksi);
+					console.log(valJmlTransaksi);
+					
+					if(valTglTransaksi != '' && valSmbTransaksi != '' && valJnsTransaksi != '' && valKetTransaksi != '' && valJmlTransaksi > 0)
+					{
+							arrTransaksi.push({
+							'tglTransaksi': valTglTransaksi,
+							'sumberTransaksi': valSmbTransaksi,
+							'jnsTransaksi': valJnsTransaksi,
+							'keteranggan': valKetTransaksi,
+							'jmlTransaksi':valJmlTransaksi
+						});  
+					}
+				});
+				unloadContent();
+				
+				
+				if(arrTransaksi.length > 0)
+				{
+					console.log(arrTransaksi);
+					loadContent();
+						var request= <%= $this->submitCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+								arr:arrTransaksi
+							});
+							request.dispatch();
+				}
+				else
+				{
+					toastr.error("Transaksi Belum Dimasukkan!");
+				}
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				        bindBrgTable();
+				        jQuery('.daterange').datepicker();
+				        jQuery('.daterange').on('changeDate', function(ev){
+							jQuery(this).datepicker('hide');
+							jQuery('.daterange').show();
+							
+						});
+						jQuery('.daterange').focusout(function() {
+								jQuery('.daterange').show();
+							});
+						jQuery('.autoJml').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function bindBrgTable()
+			{
+				var parsedSumber = [];
+					parsedSumber.push({
+						'id': 0,
+						'text': 'Penggudangan'
+					});
+					parsedSumber.push({
+						'id': 1,
+						'text': 'Percetakan'
+					});
+					
+				var parsedJns = [];
+					parsedJns.push({
+						'id': 0,
+						'text': 'Pendapatan'
+					});
+					parsedJns.push({
+						'id': 1,
+						'text': 'Pengeluaran'
+					});
+					
+				jQuery(".sumberTransaksi").select2({data: parsedSumber,width: '150px'});
+				jQuery(".jnsTransaksi").select2({data: parsedJns,width: '150px'});
+			}
+			
+			function deleteClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->deleteCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+		</script>
+		
+</com:TContent>

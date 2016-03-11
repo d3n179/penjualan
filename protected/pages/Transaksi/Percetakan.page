@@ -1,0 +1,617 @@
+<com:TContent ID="Main">
+	<h2>Transaksi Percetakan</h2>
+	<hr>
+	 <com:TActivePanel CssClass="form"><!--form begin-->
+	
+	<div class="modal fade" id="modal-3">
+		<div class="modal-dialog" style="width:90%;">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title">Bill Percetakan</h4>
+				</div>
+				
+				<div class="modal-body" style="height:500px">
+				</div>
+				
+				<div class="modal-footer">
+					<div class="row">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<com:TActiveButton
+					ID="submitBtn" 
+					Text="Submit"
+					Visible="true"
+					OnClick="saveRows"
+					CausesValidation="true"
+					ValidationGroup="val"
+					CssClass="btn btn-green">
+					<prop:ClientSide 
+						OnLoading="loadContent();"
+						OnComplete="unloadContent();"/>
+				</com:TActiveButton>
+			</div>
+		</div>	
+		
+	</div>
+	
+								
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="jns_transaksi" class="control-label">Jenis Transaksi</label>
+				<com:TActiveDropDownList
+						ID="jns_transaksi" 
+						AutoPostBack="false"
+						SelectedValue="0"
+						CausesValidation = "true">
+						<com:TListItem Text="Member/Reguler" value="0"/>
+						<com:TListItem Text="OTC" value="1" />
+				</com:TActiveDropDownList>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="jns_transaksi"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							InitialValue="empty"
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+			</div>	
+							
+		</div>
+		
+		<div class="col-md-3">
+			<div class="form-group">
+				<label for="pelanggan" class="control-label">Pelanggan</label>
+				<div id="PanelDDPelanggan">
+				<com:TActiveDropDownList
+						ID="DDPelanggan" 
+						PromptValue="empty"
+						AutoPostBack="false"
+						DataTextField="nama"
+						DataValueField="id"
+						CausesValidation = "true">
+				</com:TActiveDropDownList>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="DDPelanggan"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							InitialValue="empty"
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+				</div>		
+				<com:TActiveTextBox
+						ID="nmPelanggan" 
+						AutoPostBack="false"
+						CssClass="form-control"
+						Enabled = "false"
+						CausesValidation = "true">
+				</com:TActiveTextBox>
+						<com:TRequiredFieldValidator 
+							ControlToValidate="nmPelanggan"											 
+							ErrorMessage=""
+							Display="Dynamic"
+							FocusOnError="false" 
+							CssClass="valRequired"
+							ControlCssClass="valctrl"
+							ValidationGroup="val" />
+			</div>	
+							
+		</div>		
+	</div>
+	
+	<div class="row" ID="historyPanel" Style="Display:None;">
+		<div class="col-md-3" >
+			<div class="form-group">
+				<label for="hidtorytransaksi" class="control-label">History Transaksi</label>
+				<com:TActiveDropDownList
+						ID="hirtoryTransaksi" 
+						PromptValue="empty"
+						AutoPostBack="false"
+						DataTextField="nama"
+						DataValueField="id"
+						CausesValidation = "true">
+				</com:TActiveDropDownList>
+			</div>
+		</div>	
+	</div>
+	
+	<div class="row">
+		<div class="col-md-3">
+			<div class="form-group">
+				<button type="button" class="btn btn-blue" OnClick="addRow();">Tambah Baris</button>
+				
+			</div>
+		</div>	
+	</div>
+	<com:TActiveHiddenField ID="arrKategori"/>
+	<com:TActiveHiddenField ID="arrBarang"/>
+	<div class="row">	
+		<div class="col-md-12">
+		<div class="form-group">
+			<com:TActiveHiddenField ID="arrPenjualan"/>
+			<table width="100%" class="table table-bordered table-striped datatable" id="table-1">
+				<thead>
+					<tr>
+						<th width="25%">Kategori</th>
+						<th width="25%">Nama Cetakan</th>
+						<th width="15%">Harga / Cetakan</th>
+						<th width="15%">Jumlah Pesanan</th>
+						<th width="15%">Estimasi hari</th>
+						<th width="15%">Tuntuan hari</th>
+						<th width="15%">Lembur (%)</th>
+						<th width="15%">Subtotal</th>
+						<th width="15%">Aksi</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+				 <tfoot>
+					<tr>
+					  <td colspan="7" align="right"><strong>Subtotal Cetakan</strong></td>
+					  <td align="center"><label id="subtotalCetakan">0.00</label></td>
+					  <td></td>
+					</tr>
+					<tr>
+					  <td colspan="7" align="right"><strong>Diskon</strong></td>
+					  <td align="center"><input id="diskonCetakan" OnChange="calculateAll();" style="width: 100px;" class="form-control"type="text" value="0.00"></td>
+					  <td></td>
+					</tr>
+					<tr>
+					  <td colspan="7" align="right"><strong>Total Harga Cetakan</strong></td>
+					  <td align="center"><label id="totalCetakan">0.00</label></td>
+					  <td></td>
+					</tr>
+					<tr>
+					  <td colspan="7" align="right"><strong>DP</strong></td>
+					  <td align="center"><input id="dpayment"  style="width: 100px;" class="form-control"type="text" value="0.00"></td>
+					  <td></td>
+					</tr>
+				  </tfoot>
+			</table>
+		</div>
+	</div>
+	</div>
+	</com:TActivePanel>	<!--form End-->
+	<com:TCallback ID="barangCallback" OnCallback="barangChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="ukuranCallback" OnCallback="ukuranChanged" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="deleteCallback" OnCallback="deleteData" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="submitCallback" OnCallback="submitBtnClicked" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="cekStokCallback" OnCallback="cekStok" ActiveControl.CausesValidation="false"/>
+	<com:TCallback ID="pelangganCallback" OnCallback="pelangganChanged" ActiveControl.CausesValidation="false"/>
+	
+	<script type="text/javascript">
+			jQuery(document).ready(function(jQuery)
+			{
+				jQuery('#diskonCetakan').autoNumeric('init');
+				jQuery('#dpayment').autoNumeric('init');
+				jQuery('#<%= $this->nmPelanggan->getClientID()%>').hide();
+				jQuery('#<%= $this->hirtoryTransaksi->getClientID()%>').select2({allowClear: true});
+				jQuery('#<%= $this->DDPelanggan->getClientID()%>').select2({allowClear: true}).on('change', function(e) 
+				{
+					if(e.val == null)
+					{
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').val('empty');
+						jQuery('#historyPanel').hide();
+					}
+					else
+					{
+						var request= <%= $this->pelangganCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+							id:e.val
+						});
+						request.dispatch();
+					}
+				});
+				
+				jQuery('#<%= $this->jns_transaksi->getClientID()%>').select2({allowClear: false}).on('change', function(e) 
+				{
+					if(e.val == 0)
+					{
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').prop('disabled',false);
+						jQuery('#PanelDDPelanggan').show();
+						jQuery('#historyPanel').hide();
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').prop('disabled',true);
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').hide();
+					}
+					else
+					{
+						jQuery('#<%= $this->DDPelanggan->getClientID()%>').prop('disabled',true);
+						jQuery('#PanelDDPelanggan').hide();
+						jQuery('#historyPanel').hide();
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').prop('disabled',false);
+						jQuery('#<%= $this->nmPelanggan->getClientID()%>').show();
+					}
+				});
+				
+				BindGrid();
+			});
+			
+			function ukuranChangedCallback(id,index)
+			{
+				console.log(id);
+				console.log(index);
+				var request= <%= $this->ukuranCallback->ActiveControl->Javascript %>;
+					request.setCallbackParameter({
+						id:id,index:index
+					});
+					request.dispatch();
+				unloadContent();
+			}
+			
+			function addRow()
+			{
+				var tableContainer = jQuery("#table-1").DataTable();
+				
+				var data = tableContainer
+							.rows()
+							.data();
+				var i = data.length + 1;
+				tableContainer.row.add( [
+					'<input id="kategCetakan'+i+'" class="kategCetakan" type="text" /> <input id="arrkategCetakan'+i+'" class="arrkategCetakan" type="hidden" />',
+					'<input id="nmCetakan'+i+'" class="nmCetakan" type="text" />',
+					'<input id="hrgCetakan'+i+'" style="width: 100px;" class="form-control autoJml hrgCetakan" type="text" Value="0.00" onChange="calculate('+i+')"/>',
+					'<input id="jmlPesanan'+i+'" style="width: 50px;" class="form-control numeric jmlPesanan" type="text" onChange="calculate('+i+')">',
+					'<input id="esthari'+i+'" style="width: 50px;" type="text" class="form-control numeric esthari" onChange="calculate('+i+')" />',
+					'<input id="ttHari'+i+'" style="width: 50px;" class="form-control numeric ttHari" type="text" onChange="calculate('+i+')" />',
+					'<input id="lembur'+i+'" style="width: 50px;" class="form-control numeric lembur" type="text" onChange="calculate('+i+')" />',
+					'<label id="subtotalCetakan'+i+'" class="subtotalCetakan">0.00</label>',
+					'<button type="button" id="row'+i+'" class="btn btn-danger btn-sm btn-icon icon-left" OnClick="deleteRow('+i+')"><i class="entypo-cancel"></i>Hapus</button>'
+				] ).draw( false );
+				
+				
+			}
+			
+			function deleteRow(id)
+			{
+				var tableContainer = jQuery("#table-1").DataTable();
+				var rowId = jQuery("#row"+id).closest("tr").get(0);
+				tableContainer.row(rowId).remove().draw( false );
+				calculateAll();
+			}
+			
+			
+			function calculate(i)
+			{
+				var jmlPesanan = jQuery("#jmlPesanan"+i).val();
+				var hargaCetakan = jQuery("#hrgCetakan"+i).val();
+				var estHari = parseInt(jQuery("#esthari"+i).val());
+				var ttHari = parseInt(jQuery("#ttHari"+i).val());
+				var lembur = jQuery("#lembur"+i).val();
+				hargaCetakan = accounting.unformat(hargaCetakan); 
+				
+				if(jmlPesanan > 0 && hargaCetakan > 0)
+				{
+					var subtotal = jmlPesanan * hargaCetakan;
+					
+					if(estHari != '' && ttHari != '' && lembur != '')
+					{
+						if(ttHari < estHari)
+						{
+							var selisihHari = estHari - ttHari;
+							var tempLembur = subtotal * (lembur / 100);
+							var totalLembur = tempLembur * selisihHari;
+							subtotal += totalLembur;
+						}
+						
+						
+					}
+					subtotal = accounting.formatNumber(subtotal, 2, ",");
+					jQuery("#subtotalCetakan"+i).text(subtotal);
+					
+					
+				}
+				else
+				{
+					jQuery("#subtotalCetakan"+i).text("0.00");
+				}
+				
+				calculateAll();
+			}
+			
+			function calculateAll()
+			{
+				var TotalCetakan = 0;
+				var TotalHargaCetakan = 0;
+				var table = jQuery('#table-1').dataTable();
+				jQuery(table.fnGetNodes()).each(function(row) {
+					var subtotalCetakan = jQuery(this).find('td .subtotalCetakan');
+					var valSubtotalCetakan = jQuery(subtotalCetakan[0]).text(); 
+					valSubtotalCetakan = accounting.unformat(valSubtotalCetakan);
+					
+					if(valSubtotalCetakan > 0 && typeof valSubtotalCetakan !== "undefined")
+					{
+						TotalCetakan += valSubtotalCetakan;
+						TotalHargaCetakan += valSubtotalCetakan;
+					}  
+				});
+				
+				var diskonCetakan = jQuery("#diskonCetakan").val();
+				diskonCetakan = accounting.unformat(diskonCetakan); 
+				
+				if(diskonCetakan > 0 && diskonCetakan != '')
+				{
+					TotalHargaCetakan -= diskonCetakan;
+				}
+				
+				TotalCetakan = accounting.formatNumber(TotalCetakan, 2, ",");
+				TotalHargaCetakan = accounting.formatNumber(TotalHargaCetakan, 2, ",");
+				jQuery("#subtotalCetakan").text(TotalCetakan);
+				jQuery("#totalCetakan").text(TotalHargaCetakan);
+			}
+			
+			function saveRows()
+			{
+				var arrPercetakan = [];
+				var tableContainer = jQuery("#table-1").dataTable();
+				
+				jQuery(tableContainer.fnGetNodes()).each(function(row) {
+					
+					var elNmCetakan = jQuery(this).find('td .nmCetakan');
+					var valNmCetakan = jQuery(elNmCetakan[1]).val();
+					
+					var elHrgCetakan = jQuery(this).find('td .hrgCetakan');
+					var valHrgCetakan = jQuery(elHrgCetakan[0]).val();
+					
+					var elJmlPesanan = jQuery(this).find('td .jmlPesanan');
+					var valJmlcetakan = jQuery(elJmlPesanan[0]).val();
+					
+					var elEstHari = jQuery(this).find('td .esthari');
+					var valEstHari = jQuery(elEstHari[0]).val();
+					
+					var elTtHari = jQuery(this).find('td .ttHari');
+					var valTtHari = jQuery(elTtHari[0]).val();
+					
+					var elLembur = jQuery(this).find('td .lembur');
+					var valLembur = jQuery(elLembur[0]).val();
+					
+					var elSubCetakan = jQuery(this).find('td .subtotalCetakan');
+					var valSubCetakan = jQuery(elSubCetakan[0]).text();
+					
+					console.log(valNmCetakan);
+					valHrgCetakan = accounting.unformat(valHrgCetakan);
+					valSubCetakan = accounting.unformat(valSubCetakan); 
+					
+					if(valNmCetakan != '' && valJmlcetakan > 0 && valHrgCetakan > 0 )
+					{
+							arrPercetakan.push({
+							'idCetakan': valNmCetakan,
+							'hrgCetakan': valHrgCetakan,
+							'jmlPesanan': valJmlcetakan,
+							'estHari': valEstHari,
+							'ttHari':valTtHari,
+							'lembur': valLembur,
+							'subtotal': valSubCetakan
+						});  
+					}
+				});
+				
+				if(arrPercetakan.length > 0)
+				{
+					var diskonCetakan = jQuery("#diskonCetakan").val();
+					var subtotalCetakan = jQuery("#subtotalCetakan").text();
+					var totalCetakan = jQuery("#totalCetakan").text();
+					var dpayment = jQuery("#dpayment").val();
+					
+					diskonCetakan = accounting.unformat(diskonCetakan);
+					subtotalCetakan = accounting.unformat(subtotalCetakan); 
+					totalCetakan = accounting.unformat(totalCetakan); 
+					dpayment = accounting.unformat(dpayment); 
+					
+					console.log(arrPercetakan);
+					loadContent();
+					var request= <%= $this->submitCallback->ActiveControl->Javascript %>;
+						request.setCallbackParameter({
+								arr:arrPercetakan,diskonCetakan:diskonCetakan,subtotalCetakan:subtotalCetakan,totalCetakan:totalCetakan,dpayment:dpayment
+							});
+							request.dispatch();
+						
+				}
+				else
+				{
+					toastr.error("Cetakan Belum Dimasukkan!");
+				}
+			}
+			
+			function bindBrgTable()
+			{	
+					var parsed = [];
+					parsed.push({
+						'id': 0,
+						'text': ''
+					});
+					
+				jQuery(".nmCetakan:not([class*='grided'])").select2(
+					{
+						allowClear: true,
+						data: parsed,
+						width: '200px'
+					});
+				
+			}
+			
+			function BindGridTabNew(i,arr)
+			{
+				jQuery("#nmCetakan"+i+":not([class*='grided'])").addClass('grided');
+				jQuery("#nmCetakan"+i).select2(
+				{
+					allowClear: true,
+					data: arr,
+					createSearchChoice:function(term, data) {
+						if ( jQuery(data).filter( function() {
+						  return this.text.localeCompare(term)===0;
+						}).length===0) {
+						  return {id:term, text:term};
+						}
+					  },
+					width: '200px'
+				}).on('change', function(e) 
+				{
+					var elNm = jQuery(e.target).attr('id');
+					var i = elNm.substring(9);
+					
+					jQuery('#hrgCetakan'+i).val("0.00");
+					jQuery('#jmlPesanan'+i).val("");
+					jQuery('#esthari'+i).val("");
+					jQuery('#ttHari'+i).val("");
+					jQuery('#lembur'+i).val("");
+					jQuery('#subtotalCetakan'+i).text("0.00");
+					
+					if(e.val == null || e.val == '')
+					{
+						jQuery('#'+elNm).val('');
+						jQuery('#hrgCetakan'+i).val("0.00");
+					}
+					else
+					{
+						loadContent();
+						var request= <%= $this->barangCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:e.val,index:i
+							});
+							request.dispatch();
+						unloadContent();
+					}
+					
+					
+				});
+			}
+			
+			function BindGridKategori()
+			{
+				var arrKategori = jQuery('#<%= $this->arrKategori->getClientID()%>').val();
+				if(arrKategori != '')
+				{
+					var parsedKateg = JSON.parse(arrKategori);
+				}
+				else
+				{
+					var parsedKateg = [];
+					parsedKateg.push({
+						'id': 0,
+						'text': ''
+					});
+				}
+				
+				jQuery(".kategCetakan").select2(
+				{
+					allowClear: true,
+					data: parsedKateg,
+					width: '200px'
+				}).on('change', function(e) 
+				{
+					var elKateg = jQuery(e.target).attr('id');
+					var i = elKateg.substring(12);
+					
+					jQuery('#nmCetakan'+i).val("");
+					jQuery('#hrgCetakan'+i).val("0.00");
+					jQuery('#jmlPesanan'+i).val("");
+					jQuery('#esthari'+i).val("");
+					jQuery('#ttHari'+i).val("");
+					jQuery('#lembur'+i).val("");
+					jQuery('#subtotalCetakan'+i).text("0.00");
+					
+					if(e.val == null || e.val == '')
+					{
+						jQuery('#'+elKateg).val('');
+						jQuery('#nmCetakan'+i).val("");
+						jQuery('#hrgCetakan'+i).val("0.00");
+						var arrBrngNew = [];
+							arrBrngNew.push({
+							'id': 0,
+							'text': ''
+						});
+					}
+					else
+					{
+						var arrBrng = jQuery('#<%= $this->arrBarang->getClientID()%>').val();
+						var parsed = JSON.parse(arrBrng);
+						var arrBrngNew = []
+						jQuery.each(parsed, function(key,valueObj){
+							if(valueObj['kategori_cetakan'] ==  e.val)
+							arrBrngNew.push({
+										'id': valueObj['id'],
+										'text': valueObj['nama_cetakan']
+									});
+							});
+							
+					}
+					
+					BindGridTabNew(i,arrBrngNew);
+				});
+				
+			}
+			
+			function BindGrid()
+			{
+				var responsiveHelper;
+				var breakpointDefinition = {
+					tablet: 1024,
+					phone : 480
+				};
+				var tableContainer;
+				tableContainer = jQuery("#table-1");
+				
+				tableContainer.dataTable({
+					"sPaginationType": "bootstrap",
+					"sDom": "t<'row'<'col-xs-6 col-left'i><'col-xs-6 col-right'p>>",
+					"pageLength": 5,
+					"aLengthMenu": [[5,10, 25, 50, -1], [5,10, 25, 50, "All"]],
+					"bStateSave": true,
+					
+		
+				    // Responsive Settings
+				    bAutoWidth     : false,
+				    fnPreDrawCallback: function () {
+				        // Initialize the responsive datatables helper once.
+				        if (!responsiveHelper) {
+				            responsiveHelper = new ResponsiveDatatablesHelper(tableContainer, breakpointDefinition);
+				        }
+				    },
+				    fnRowCallback  : function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+				        responsiveHelper.createExpandIcon(nRow);
+				    },
+				    fnDrawCallback : function (oSettings) {
+				        responsiveHelper.respond();
+				        BindGridKategori();
+				        bindBrgTable();
+				        jQuery('.numeric').numeric({ decimal : ".",  negative : false, scale: 2 });
+				        jQuery('.autoJml').autoNumeric('init');
+				    }
+				});
+				
+				jQuery(".dataTables_wrapper select").select2({
+					minimumResultsForSearch: -1
+				});
+			}
+			
+			function deleteClicked(id)
+			{
+				loadContent();
+						var request= <%= $this->deleteCallback->ActiveControl->Javascript %>;
+							request.setCallbackParameter({
+								id:id
+							});
+							request.dispatch();
+						unloadContent();
+			}
+			
+			function historyClicked()
+			{
+				
+			}
+		</script>
+		
+</com:TContent>
